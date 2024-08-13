@@ -59,6 +59,9 @@ Ce projet est une interface simple pour la gestion des parcours de formation. Il
   - **/models** : Modèles Mongoose.
   - **/routes** : Routes API.
   - **/views** : Vues HTML pour les interfaces admin et learner.
-  - **/public/css** : Fichiers CSS pour le style.
+  - **app**
+  - **server**
+- **/public/css** : Fichiers CSS pour le style.
+
 
 
