@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Catalogue Management</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin - Gestion des Formations</h1>
+        <form id="catalogueForm">
+            <label for="name">Nom de la formation:</label>
+            <input type="text" id="name" name="name" required><br><br>
+
+            <label for="price">Prix de la formation:</label>
+            <input type="number" id="price" name="price" required><br><br>
+
+            <label for="days">Nombre de jours de formation:</label>
+            <input type="number" id="days" name="days" required><br><br>
+
+            <label for="pricePerDay">Prix par jour:</label>
+            <input type="text" id="pricePerDay" name="pricePerDay" readonly><br><br>
+
+            <button type="submit">Sauvegarder</button>
+        </form>
+
+        <h2>Liste des Formations</h2>
+        <ul id="formationList"></ul>
+    </div>
+    <script>
+        document.getElementById('catalogueForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const price = document.getElementById('price').value;
+            const days = document.getElementById('days').value;
+            
+            const response = await fetch('/api/catalogue-entities', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, price, days })
+            });
+            
+            if (response.ok) {
+                loadFormations();
+            } else {
+                alert('Erreur lors de la sauvegarde.');
+            }
+        });
+
+        async function loadFormations() {
+            const response = await fetch('/api/catalogue-entities');
+            const formations = await response.json();
+            const formationList = document.getElementById('formationList');
+            formationList.innerHTML = '';
+            formations.forEach(formation => {
+                const li = document.createElement('li');
+                li.textContent = `${formation.name} - ${formation.price}€ pour ${formation.days} jours (${formation.price / formation.days}€ par jour)`;
+                formationList.appendChild(li);
+            });
+        }
+
+        loadFormations();
+    </script>
+</body>
+</html>

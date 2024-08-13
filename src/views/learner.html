@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learner - Enroll in a Course</title>
+    <link rel="stylesheet" href="/css/styles.css">
+
+</head>
+<body>
+    <div id="container">
+        <h1>Inscription aux Formations</h1>
+        <form id="enroll-form">
+            <div>
+                <label for="formation">Sélectionnez une formation :</label>
+                <select id="formation" name="formation" required>
+                    <!-- Les options de formation seront ajoutées ici par JavaScript -->
+                </select>
+            </div>
+            <div>
+                <label for="firstName">Prénom :</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div>
+                <label for="lastName">Nom de famille :</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+            <div>
+                <label for="age">Âge :</label>
+                <input type="number" id="age" name="age" required>
+            </div>
+            <button type="submit">S'inscrire</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const formationSelect = document.getElementById('formation');
+        const enrollForm = document.getElementById('enroll-form');
+
+        // Charger les formations disponibles depuis l'API
+        fetch('/api/catalogue-entities')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(formation => {
+                    const option = document.createElement('option');
+                    option.value = formation._id;
+                    option.textContent = `${formation.name} - ${formation.price}€ (${formation.days} jours)`;
+                    formationSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching formations:', error));
+
+        // Gérer la soumission du formulaire d'inscription
+        enrollForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const selectedFormationId = formationSelect.value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const age = document.getElementById('age').value;
+
+            fetch('/api/learners', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    age,
+                    catalogueEntityId: selectedFormationId,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Inscription réussie!');
+                    enrollForm.reset();
+                } else {
+                    alert('Erreur lors de l\'inscription');
+                }
+            })
+            .catch(error => console.error('Error submitting form:', error));
+        });
+    });
+
+    </script>
+</body>
+</html>
