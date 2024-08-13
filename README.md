@@ -55,7 +55,7 @@ Ce projet est une interface simple pour la gestion des parcours de formation. Il
 ## Structure du Projet
 
 - **/src**
-  - **/database** : Configuration de la connexion à la base de données.
+  - **database** : Configuration de la connexion à la base de données.
   - **/models** : Modèles Mongoose.
   - **/routes** : Routes API.
   - **/views** : Vues HTML pour les interfaces admin et learner.
