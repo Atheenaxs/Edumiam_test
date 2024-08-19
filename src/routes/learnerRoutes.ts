@@ -4,6 +4,11 @@ import CatalogueItem from '../models/CatalogueItem';
 
 const router = Router();
 
+router.get('/', async (req, res) => {
+    const learners = await Learner.find();
+    res.json(learners);
+});
+
 router.post('/', async (req, res) => {
     const { firstName, lastName, age, catalogueEntityId } = req.body;
 
