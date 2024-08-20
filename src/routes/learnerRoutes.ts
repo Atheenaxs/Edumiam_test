@@ -26,7 +26,8 @@ router.post('/', async (req, res) => {
         });
 
         if (existingItem) {
-            return res.status(400).json({ success: false, message: 'Already enrolled in this course.' });
+            const endDate = await existingItem.getEndDate();
+            return res.status(400).json({ success: false, message: 'Already enrolled in this course.', endDate });
         }
 
         const newItem = new CatalogueItem({
@@ -36,8 +37,10 @@ router.post('/', async (req, res) => {
         });
 
         await newItem.save();
+        
+        const endDate = await newItem.getEndDate();
 
-        res.status(201).json({ success: true, data: newItem });
+        res.status(201).json({ success: true, data: newItem, endDate });
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ success: false, message: 'Server error' });
