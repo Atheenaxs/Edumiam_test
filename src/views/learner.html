@@ -75,10 +75,16 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Inscription réussie!');
+                    alert('Inscription réussie! La formation se termine le ' + new Date(data.endDate).toLocaleDateString());
                     enrollForm.reset();
                 } else {
-                    alert('Erreur lors de l\'inscription');
+                    if (data.endDate) {
+                        if (data.endDate) {
+                            alert('Erreur lors de l\'inscription. Vous êtes déjà inscrit(e) à cette formation qui se termine le ' + new Date(data.endDate).toLocaleDateString());
+                        } else {
+                            alert('Erreur lors de l\'inscription');
+                        }
+                    }
                 }
             })
             .catch(error => console.error('Error submitting form:', error));
